@@ -45,7 +45,9 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ## Part B — Connect SpoitiLists inside SpotiFLAC
 
-**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. Recent SpoitiLists builds expect a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
+**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.1.0+** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
+
+**Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`). Use **1.1.0** so upgrades from any **1.0.x** are unambiguous. The downloadable file is named **`SpotiLists.spotiflac-ext`** (registry points at that exact path; GitHub raw URLs are **case-sensitive**).
 
 1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.1.0+**).
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
@@ -60,23 +62,7 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ---
 
-## Troubleshooting: version stuck at “1.02” / 1.0.2
-
-- The extension **id** in SpotiFLAC is still **`spoiti-lists`** (that is the internal package name). The **display name** is **SpoitiLists**.
-- **“v1.02” in the Store** is often the same as **1.0.2** (patch version **2**): some UIs drop the middle **0**, so it is easy to think you are on a different build than you are.
-- SpotiFLAC compares the **`version` string in `manifest.json`** inside the `.spotiflac-ext` you install with what is already on disk. If the downloaded file is still **1.0.2**, the app will keep showing **1.0.2** / **1.02-style** labels until you install a package whose manifest says something newer (e.g. **1.1.0**).
-
-**Fix:** Refresh the Store, or install **`extensions/SpotiLists.spotiflac-ext`** manually (see below). The registry uses a distinct filename and **`?v=…`** on the download URL to reduce **GitHub raw CDN** serving an older zip.
-
----
-
-## Troubleshooting: “already at version …” when updating
-
-Same root cause: the **.spotiflac-ext** you opened has the **same** `manifest.json` version as the installed copy (often an **old file** still cached). Re-download **`SpotiLists.spotiflac-ext`** or wait a few minutes and pull to refresh the Store.
-
----
-
-## Part C — SpotiFLAC build expected for recent SpoitiLists
+## Part C — SpotiFLAC build expected for 1.1.0
 
 For **Connect** to show feedback and fill **Spotify login link**, use a SpotiFLAC Mobile build that includes:
 
@@ -97,9 +83,8 @@ The copy in this repo’s **`SpotiFLAC-Mobile-main`** folder includes those chan
 
 ## Optional: install the file without the Store
 
-1. Download **`extensions/SpotiLists.spotiflac-ext`** from this repo (raw GitHub or ZIP of the repo).  
-   A duplicate path **`extensions/spoiti-lists.spotiflac-ext`** is the **same zip** for old links.
-2. SpotiFLAC → **Settings** → **Extensions** → install the **.spotiflac-ext** file (as described in SpotiFLAC’s own help).
+1. Download **`extensions/SpotiLists.spotiflac-ext`** from this repo (raw or ZIP of the repo). A duplicate **`extensions/spoiti-lists.spotiflac-ext`** (same file) is kept for old links.
+2. SpotiFLAC → **Settings** → **Extensions** → install **.spotiflac-ext** (as described in SpotiFLAC’s own help).
 
 ---
 
@@ -112,7 +97,7 @@ From the repo root:
 - **macOS / Linux:**  
   `chmod +x scripts/package.sh && ./scripts/package.sh`
 
-This creates **`SpotiLists.spotiflac-ext`** at the repo root and copies it to **`extensions/SpotiLists.spotiflac-ext`** (the URL used in **`registry.json`** for the Store). A second copy is written to **`extensions/spoiti-lists.spotiflac-ext`** for backward compatibility.
+This creates **`SpotiLists.spotiflac-ext`** at the repo root and copies it to **`extensions/SpotiLists.spotiflac-ext`** (Store `download_url`) and **`extensions/spoiti-lists.spotiflac-ext`** (legacy alias).
 
 After changing `manifest.json` or `index.js`, rebuild, commit, and push so the Store URL stays up to date.
 
