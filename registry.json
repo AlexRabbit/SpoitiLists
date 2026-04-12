@@ -6,10 +6,10 @@
       "id": "spoiti-lists",
       "name": "spoiti-lists",
       "display_name": "SpoitiLists",
-      "version": "1.0.4",
+      "version": "1.0.2",
       "author": "AlexRabbit",
       "description": "Addon for SpotiFLAC: your Spotify playlists and saved tracks in the app. Sign in once; open a playlist to see the latest songs from Spotify.",
-      "download_url": "https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/extensions/spoiti-lists.spotiflac-ext?v=1.0.4",
+      "download_url": "https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/extensions/spoiti-lists.spotiflac-ext",
       "category": "integration",
       "tags": [
         "spotify",

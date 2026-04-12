@@ -45,9 +45,9 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ## Part B — Connect SpoitiLists inside SpotiFLAC
 
-**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.0.3** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
+**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists** (current release **1.0.2**) works best with a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
 
-1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.0.3+**).
+1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.0.2** from the Store or `.spotiflac-ext`).
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
 3. Leave **Redirect URI** as `spotiflac://callback` unless you changed it in Spotify’s dashboard (both places must **match exactly**).
 4. Tap **1. Connect to Spotify**. The **Spotify login link** field fills with a long URL — **select and copy** it (or use the snackbar hint), open it in **Chrome / Safari**, log in, and tap **Agree**.
@@ -67,11 +67,11 @@ SpotiFLAC compares the **`version` inside `manifest.json`** in the `.spotiflac-e
 1. **GitHub raw CDN** briefly served an **older copy** of the same file URL.
 2. You picked a **local .spotiflac-ext** that was not rebuilt (still 1.0.2).
 
-**Fix:** Pull to refresh the Store, try again after a few minutes, or install from the repo’s **`extensions/spoiti-lists.spotiflac-ext`** after rebuilding. From **1.0.4**, the registry `download_url` includes a **`?v=…` query** so the client is less likely to reuse a stale CDN response.
+**Fix:** Pull to refresh the Store, try again after a few minutes, or install from the repo’s **`extensions/spoiti-lists.spotiflac-ext`** after rebuilding. If GitHub’s CDN serves an old file, wait briefly or open the raw URL in a browser and confirm `manifest.json` inside the zip shows **`"version": "1.0.2"`**.
 
 ---
 
-## Part C — SpotiFLAC build expected for 1.0.3+
+## Part C — SpotiFLAC build expected (for full OAuth UX)
 
 For **Connect** to show feedback and fill **Spotify login link**, use a SpotiFLAC Mobile build that includes:
 
