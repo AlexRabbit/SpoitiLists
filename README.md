@@ -2,31 +2,9 @@ If this helped you, consider starring the repo ⭐
 
 # SpoitiLists — an addon for SpotiFLAC
 
-**Repository:** [github.com/AlexRabbit/SpoitiLists](https://github.com/AlexRabbit/SpoitiLists)
-
 **SpoitiLists** is a free extension for **[SpotiFLAC Mobile](https://github.com/zarzet/SpotiFLAC-Mobile)**. It shows **your real Spotify playlists** and **your saved (liked) songs** inside SpotiFLAC’s **Home** feed. When you **open a playlist** in the app, it loads the **current track list** from Spotify, so new songs you add on Spotify show up the next time you open that playlist (SpotiFLAC may cache the Home screen for a few minutes).
 
 This project is **not** made by Spotify or the SpotiFLAC team. It uses Spotify’s official **Web API** and **OAuth** (you log in with your Spotify account).
-
----
-
-## GitHub “About” description (copy-paste)
-
-Paste this into your repository **About** field on GitHub:
-
-```
-SpoitiLists — SpotiFLAC Mobile addon: your Spotify playlists & saved tracks in the app (OAuth). Not affiliated with Spotify or SpotiFLAC.
-```
-
-(Same text is in `REPO_ABOUT.txt`.)
-
----
-
-## What you need before you start
-
-1. An **Android phone** with **SpotiFLAC Mobile** installed ([releases](https://github.com/zarzet/SpotiFLAC-Mobile/releases)).
-2. A **Spotify account** (free or Premium).
-3. A **GitHub account** only if you are **installing from this repo’s Store link** below. If you install the `.spotiflac-ext` file manually, GitHub is optional.
 
 ---
 
@@ -37,15 +15,11 @@ SpotiFLAC can load extensions from a **registry JSON** on GitHub.
 1. Open **SpotiFLAC** → **Store** tab.
 2. When it asks for an **Extension Repository URL**, paste the **raw** `registry.json` link. Either of these is the same file (use whichever SpotiFLAC accepts):
 
-   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/registry.json`
    - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
 
-   (GitHub’s **Raw** button may show the second form; both are valid.)
 
 3. Find **SpoitiLists** in the list and **install** it.
 4. Go to **Settings → Extensions**, tap **SpoitiLists**, and follow **Part B** below to connect Spotify.
-
-If you **fork** this repo, set `download_url` in `registry.json` to your fork’s raw `extensions/spoiti-lists.spotiflac-ext` URL, then use **your** `registry.json` raw link in the Store.
 
 ---
 
@@ -107,24 +81,6 @@ From the repo root:
 This creates `spoiti-lists.spotiflac-ext` and copies it to **`extensions/spoiti-lists.spotiflac-ext`** (the path used in `registry.json` for GitHub raw hosting).
 
 After changing `manifest.json` or `index.js`, rebuild, commit, and push so the Store URL stays up to date.
-
----
-
-## Push this project to GitHub (first time)
-
-1. Create a **new repository** on GitHub named **`SpoitiLists`** (e.g. under **`AlexRabbit`**).
-2. On your PC, in this folder:
-
-```bash
-git init
-git add .
-git commit -m "Initial release: SpoitiLists SpotiFLAC extension"
-git branch -M main
-git remote add origin https://github.com/AlexRabbit/SpoitiLists.git
-git push -u origin main
-```
-
-If you rename the repo or change your GitHub username, update **`registry.json`**, **`manifest.json` `homepage`**, and links in **`README.md`** to match.
 
 ---
 
