@@ -2,31 +2,9 @@ If this helped you, consider starring the repo ⭐
 
 # SpoitiLists — an addon for SpotiFLAC
 
-**Repository:** [github.com/AlexRabbit/SpoitiLists](https://github.com/AlexRabbit/SpoitiLists)
-
 **SpoitiLists** is a free extension for **[SpotiFLAC Mobile](https://github.com/zarzet/SpotiFLAC-Mobile)**. It shows **your real Spotify playlists** and **your saved (liked) songs** inside SpotiFLAC’s **Home** feed. When you **open a playlist** in the app, it loads the **current track list** from Spotify, so new songs you add on Spotify show up the next time you open that playlist (SpotiFLAC may cache the Home screen for a few minutes).
 
 This project is **not** made by Spotify or the SpotiFLAC team. It uses Spotify’s official **Web API** and **OAuth** (you log in with your Spotify account).
-
----
-
-## GitHub “About” description (copy-paste)
-
-Paste this into your repository **About** field on GitHub:
-
-```
-SpoitiLists — SpotiFLAC Mobile addon: your Spotify playlists & saved tracks in the app (OAuth). Not affiliated with Spotify or SpotiFLAC.
-```
-
-(Same text is in `REPO_ABOUT.txt`.)
-
----
-
-## What you need before you start
-
-1. An **Android phone** with **SpotiFLAC Mobile** installed ([releases](https://github.com/zarzet/SpotiFLAC-Mobile/releases)).
-2. A **Spotify account** (free or Premium).
-3. A **GitHub account** only if you are **installing from this repo’s Store link** below. If you install the `.spotiflac-ext` file manually, GitHub is optional.
 
 ---
 
@@ -35,17 +13,13 @@ SpoitiLists — SpotiFLAC Mobile addon: your Spotify playlists & saved tracks in
 SpotiFLAC can load extensions from a **registry JSON** on GitHub.
 
 1. Open **SpotiFLAC** → **Store** tab.
-2. When it asks for an **Extension Repository URL**, paste the **raw** `registry.json` link. Either of these is the same file (use whichever SpotiFLAC accepts):
+2. When it asks for an **Extension Repository URL**, paste this **raw** `registry.json` link:
 
-   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/registry.json`
-   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
+   `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
 
-   (GitHub’s **Raw** button may show the second form; both are valid.)
 
 3. Find **SpoitiLists** in the list and **install** it.
 4. Go to **Settings → Extensions**, tap **SpoitiLists**, and follow **Part B** below to connect Spotify.
-
-If you **fork** this repo, set `download_url` in `registry.json` to your fork’s raw `extensions/spoiti-lists.spotiflac-ext` URL, then use **your** `registry.json` raw link in the Store.
 
 ---
 
@@ -74,9 +48,10 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists**.
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
 3. Leave **Redirect URI** as `spotiflac://callback` unless you changed it in Spotify’s dashboard (both places must **match exactly**).
-4. Tap **1. Connect to Spotify** → your browser opens → log in to Spotify → **Agree**.
-5. When you return to SpotiFLAC, open **SpoitiLists** settings again and tap **2. Finish login**.
-6. You should see a success message. If not, try **Connect** again, complete the browser step, then **Finish login** again.
+4. Tap **1. Connect to Spotify** → the browser opens → log in to Spotify → **Agree**.
+5. When Spotify sends you back to SpotiFLAC (`spotiflac://callback`), the app should **finish login automatically**. If it does not, open **SpoitiLists** settings and tap **2. Finish login** once.
+
+**If “Connect to Spotify” does nothing:** your SpotiFLAC APK must **open the OAuth URL** from extension buttons and handle **`spotiflac://callback`** (browser → app). Older store builds did not implement that; **build SpotiFLAC Mobile from source** with an up-to-date tree (Android: `extension_detail_page.dart`, `MainActivity.kt`, `AndroidManifest.xml` for `spotiflac` OAuth), or wait for an official release that includes extension OAuth support.
 
 ---
 
@@ -107,24 +82,6 @@ From the repo root:
 This creates `spoiti-lists.spotiflac-ext` and copies it to **`extensions/spoiti-lists.spotiflac-ext`** (the path used in `registry.json` for GitHub raw hosting).
 
 After changing `manifest.json` or `index.js`, rebuild, commit, and push so the Store URL stays up to date.
-
----
-
-## Push this project to GitHub (first time)
-
-1. Create a **new repository** on GitHub named **`SpoitiLists`** (e.g. under **`AlexRabbit`**).
-2. On your PC, in this folder:
-
-```bash
-git init
-git add .
-git commit -m "Initial release: SpoitiLists SpotiFLAC extension"
-git branch -M main
-git remote add origin https://github.com/AlexRabbit/SpoitiLists.git
-git push -u origin main
-```
-
-If you rename the repo or change your GitHub username, update **`registry.json`**, **`manifest.json` `homepage`**, and links in **`README.md`** to match.
 
 ---
 

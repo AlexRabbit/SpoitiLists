@@ -484,18 +484,19 @@ function connectSpotify() {
     authUrl: AUTH_URL,
     clientId: clientId,
     redirectUri: redir,
-    scope: SCOPES
+    scope: SCOPES,
+    extraParams: { state: EXT_ID }
   });
   if (!pk.success) {
     return { success: false, error: pk.error || "PKCE failed" };
   }
-  var open = auth.openAuthUrl(pk.authUrl, redir);
-  if (!open.success) {
-    return { success: false, error: open.error || "Could not open browser" };
-  }
+  // SpotiFLAC opens this URL from the action result (open_auth_url). OAuth state
+  // must be the extension id so Android can route spotiflac://callback?code=...&state=...
   return {
     success: true,
-    message: "Browser opened. After you approve, return here and tap Finish login."
+    message:
+      "Opening Spotify… After you approve, SpotiFLAC will finish login when you return.",
+    open_auth_url: pk.authUrl
   };
 }
 
