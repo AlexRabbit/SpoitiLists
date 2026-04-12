@@ -35,9 +35,12 @@ SpoitiLists — SpotiFLAC Mobile addon: your Spotify playlists & saved tracks in
 SpotiFLAC can load extensions from a **registry JSON** on GitHub.
 
 1. Open **SpotiFLAC** → **Store** tab.
-2. When it asks for an **Extension Repository URL**, paste **this** (raw file):
+2. When it asks for an **Extension Repository URL**, paste the **raw** `registry.json` link. Either of these is the same file (use whichever SpotiFLAC accepts):
 
-   `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/registry.json`
+   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/registry.json`
+   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
+
+   (GitHub’s **Raw** button may show the second form; both are valid.)
 
 3. Find **SpoitiLists** in the list and **install** it.
 4. Go to **Settings → Extensions**, tap **SpoitiLists**, and follow **Part B** below to connect Spotify.
