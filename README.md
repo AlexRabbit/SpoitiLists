@@ -45,13 +45,15 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ## Part B — Connect SpoitiLists inside SpotiFLAC
 
-**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.1.0+** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
+**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.1.1+** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
 
-**Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`). Use **1.1.0** so upgrades from any **1.0.x** are unambiguous.
+**Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`).
+
+**Store shows new version but Settings shows an old one:** The Store reads **`registry.json`**; the installed version comes from **`manifest.json` inside the `.spotiflac-ext` file**. If you bump `manifest.json` / `registry.json` but **forget to rebuild and commit** `extensions/spoiti-lists.spotiflac-ext` and `extensions/SpotiLists.spotiflac-ext`, GitHub still serves an **old zip** — users keep getting the old version. After every version bump, run **`scripts/package.sh`** or **`scripts/package.ps1`**, then **commit and push both extension files** together with the JSON files. CI on this repo checks that they match.
 
 **Store shows “Failed to install SpoitiLists”:** SpotiFLAC downloads the file from **`download_url`** in `registry.json` (see `extension_store.go` → `downloadExtension`). If that URL returns **404** (file missing on GitHub, wrong branch, or **wrong capitalization** in the path), the install fails with a generic message. **Fix:** commit and push **`extensions/spoiti-lists.spotiflac-ext`** (and/or `extensions/SpotiLists.spotiflac-ext`) to the **`main`** branch, then open the raw URL in a browser — you must see a **download**, not “404: Not Found”. The registry uses the all-lowercase filename to avoid case mismatches. After pushing, pull to refresh in the app Store (or clear the store cache in SpotiFLAC if it still fails).
 
-1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.1.0+**).
+1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.1.1+**).
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
 3. Leave **Redirect URI** as `spotiflac://callback` unless you changed it in Spotify’s dashboard (both places must **match exactly**).
 4. Tap **1. Connect to Spotify**. The **Spotify login link** field fills with a long URL — **select and copy** it (or use the snackbar hint), open it in **Chrome / Safari**, log in, and tap **Agree**.
@@ -64,7 +66,7 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ---
 
-## Part C — SpotiFLAC build expected for 1.1.0
+## Part C — SpotiFLAC build expected for 1.1.x
 
 For **Connect** to show feedback and fill **Spotify login link**, use a SpotiFLAC Mobile build that includes:
 
