@@ -13,9 +13,9 @@ This project is **not** made by Spotify or the SpotiFLAC team. It uses Spotify�
 SpotiFLAC can load extensions from a **registry JSON** on GitHub.
 
 1. Open **SpotiFLAC** → **Store** tab.
-2. When it asks for an **Extension Repository URL**, paste the **raw** `registry.json` link. Either of these is the same file (use whichever SpotiFLAC accepts):
+2. When it asks for an **Extension Repository URL**, paste this **raw** `registry.json` link:
 
-   - `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
+   `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json`
 
 
 3. Find **SpoitiLists** in the list and **install** it.
@@ -45,12 +45,18 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ## Part B — Connect SpoitiLists inside SpotiFLAC
 
+This flow is **SpoitiLists-only**: you do **not** need a patched SpotiFLAC build. The app shows a **snackbar** with the long Spotify URL — copy that line into **any browser**, finish Spotify’s consent, then bring the **authorization code** back into SpotiFLAC.
+
 1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists**.
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
 3. Leave **Redirect URI** as `spotiflac://callback` unless you changed it in Spotify’s dashboard (both places must **match exactly**).
-4. Tap **1. Connect to Spotify** → your browser opens → log in to Spotify → **Agree**.
-5. When you return to SpotiFLAC, open **SpoitiLists** settings again and tap **2. Finish login**.
-6. You should see a success message. If not, try **Connect** again, complete the browser step, then **Finish login** again.
+4. Tap **1. Connect to Spotify**. A message appears with the **full login URL** — **copy the URL line** (scroll the snackbar if needed) and **paste it into Chrome, Safari, or another browser**. Log in and tap **Agree** on Spotify.
+5. After approval, Spotify redirects to your redirect URI. Often you will see something like `spotiflac://callback?code=…&state=…` (the browser may say it cannot open the app — that is OK). **Copy the `code` value** from that address bar / error page, **or** paste the **whole callback URL** into **Authorization code** in SpoitiLists settings, tap **Save** / confirm the field, then tap **2. Finish login**.
+6. If you lost the snackbar text, tap **Show last login link again** (do **not** tap Connect again unless you want a **new** login attempt, which invalidates the previous PKCE step).
+
+**Optional — automatic handoff:** If your SpotiFLAC build **opens** `spotiflac://callback` and delivers the code to the extension, you can tap **2. Finish login** without pasting anything. That depends on the **SpotiFLAC app**, not on SpoitiLists.
+
+**Privacy:** After a successful login, clear the **Authorization code** field if you pasted a code there (it is only needed once).
 
 ---
 
