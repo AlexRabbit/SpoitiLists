@@ -47,7 +47,9 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 **Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.1.0+** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
 
-**Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`). Use **1.1.0** so upgrades from any **1.0.x** are unambiguous. The downloadable file is named **`SpotiLists.spotiflac-ext`** (registry points at that exact path; GitHub raw URLs are **case-sensitive**).
+**Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`). Use **1.1.0** so upgrades from any **1.0.x** are unambiguous.
+
+**Store shows “Failed to install SpoitiLists”:** SpotiFLAC downloads the file from **`download_url`** in `registry.json` (see `extension_store.go` → `downloadExtension`). If that URL returns **404** (file missing on GitHub, wrong branch, or **wrong capitalization** in the path), the install fails with a generic message. **Fix:** commit and push **`extensions/spoiti-lists.spotiflac-ext`** (and/or `extensions/SpotiLists.spotiflac-ext`) to the **`main`** branch, then open the raw URL in a browser — you must see a **download**, not “404: Not Found”. The registry uses the all-lowercase filename to avoid case mismatches. After pushing, pull to refresh in the app Store (or clear the store cache in SpotiFLAC if it still fails).
 
 1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.1.0+**).
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
@@ -83,7 +85,7 @@ The copy in this repo’s **`SpotiFLAC-Mobile-main`** folder includes those chan
 
 ## Optional: install the file without the Store
 
-1. Download **`extensions/SpotiLists.spotiflac-ext`** from this repo (raw or ZIP of the repo). A duplicate **`extensions/spoiti-lists.spotiflac-ext`** (same file) is kept for old links.
+1. Download **`extensions/spoiti-lists.spotiflac-ext`** from this repo (raw or ZIP). **`extensions/SpotiLists.spotiflac-ext`** is the same bytes if you prefer that name for sideloading.
 2. SpotiFLAC → **Settings** → **Extensions** → install **.spotiflac-ext** (as described in SpotiFLAC’s own help).
 
 ---
@@ -97,7 +99,7 @@ From the repo root:
 - **macOS / Linux:**  
   `chmod +x scripts/package.sh && ./scripts/package.sh`
 
-This creates **`SpotiLists.spotiflac-ext`** at the repo root and copies it to **`extensions/SpotiLists.spotiflac-ext`** (Store `download_url`) and **`extensions/spoiti-lists.spotiflac-ext`** (legacy alias).
+This creates **`SpotiLists.spotiflac-ext`** at the repo root and copies it to **`extensions/spoiti-lists.spotiflac-ext`** (Store `download_url` — **commit and push this file** so the Store can install) and **`extensions/SpotiLists.spotiflac-ext`** (same package, friendly name).
 
 After changing `manifest.json` or `index.js`, rebuild, commit, and push so the Store URL stays up to date.
 
