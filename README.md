@@ -60,7 +60,18 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ---
 
-## Part C — SpotiFLAC build expected for 1.0.3
+## Troubleshooting: “already at version 1.0.2” when updating
+
+SpotiFLAC compares the **`version` inside `manifest.json`** in the `.spotiflac-ext` file with what is already installed. If both are **1.0.2**, you get “already at version …” even if the **Store** text says a newer release — usually because:
+
+1. **GitHub raw CDN** briefly served an **older copy** of the same file URL.
+2. You picked a **local .spotiflac-ext** that was not rebuilt (still 1.0.2).
+
+**Fix:** Pull to refresh the Store, try again after a few minutes, or install from the repo’s **`extensions/spoiti-lists.spotiflac-ext`** after rebuilding. From **1.0.4**, the registry `download_url` includes a **`?v=…` query** so the client is less likely to reuse a stale CDN response.
+
+---
+
+## Part C — SpotiFLAC build expected for 1.0.3+
 
 For **Connect** to show feedback and fill **Spotify login link**, use a SpotiFLAC Mobile build that includes:
 
