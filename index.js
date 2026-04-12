@@ -1,6 +1,6 @@
 /**
  * SpoitiLists — SpotiFLAC extension (Spotify Web API + PKCE).
- * https://github.com/Lucky/SpoitiLists · https://spotiflac.zarz.moe/docs
+ * https://github.com/AlexRabbit/SpoitiLists · https://spotiflac.zarz.moe/docs
  */
 
 var EXT_ID = "spoiti-lists";

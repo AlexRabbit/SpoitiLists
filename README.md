@@ -2,7 +2,7 @@ If this helped you, consider starring the repo ⭐
 
 # SpoitiLists — an addon for SpotiFLAC
 
-**Repository:** [github.com/Lucky/SpoitiLists](https://github.com/Lucky/SpoitiLists)
+**Repository:** [github.com/AlexRabbit/SpoitiLists](https://github.com/AlexRabbit/SpoitiLists)
 
 **SpoitiLists** is a free extension for **[SpotiFLAC Mobile](https://github.com/zarzet/SpotiFLAC-Mobile)**. It shows **your real Spotify playlists** and **your saved (liked) songs** inside SpotiFLAC’s **Home** feed. When you **open a playlist** in the app, it loads the **current track list** from Spotify, so new songs you add on Spotify show up the next time you open that playlist (SpotiFLAC may cache the Home screen for a few minutes).
 
@@ -37,12 +37,12 @@ SpotiFLAC can load extensions from a **registry JSON** on GitHub.
 1. Open **SpotiFLAC** → **Store** tab.
 2. When it asks for an **Extension Repository URL**, paste **this** (raw file):
 
-   `https://raw.githubusercontent.com/Lucky/SpoitiLists/main/registry.json`
+   `https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/main/registry.json`
 
 3. Find **SpoitiLists** in the list and **install** it.
 4. Go to **Settings → Extensions**, tap **SpoitiLists**, and follow **Part B** below to connect Spotify.
 
-If your GitHub username is **not** `Lucky`, fork this repo or change the URL to your fork, then use **your** `registry.json` raw link instead.
+If you **fork** this repo, set `download_url` in `registry.json` to your fork’s raw `extensions/spoiti-lists.spotiflac-ext` URL, then use **your** `registry.json` raw link in the Store.
 
 ---
 
@@ -109,7 +109,7 @@ After changing `manifest.json` or `index.js`, rebuild, commit, and push so the S
 
 ## Push this project to GitHub (first time)
 
-1. Create a **new repository** on GitHub named **`SpoitiLists`** (under user **`Lucky`** — or your username).
+1. Create a **new repository** on GitHub named **`SpoitiLists`** (e.g. under **`AlexRabbit`**).
 2. On your PC, in this folder:
 
 ```bash
@@ -117,11 +117,11 @@ git init
 git add .
 git commit -m "Initial release: SpoitiLists SpotiFLAC extension"
 git branch -M main
-git remote add origin https://github.com/Lucky/SpoitiLists.git
+git remote add origin https://github.com/AlexRabbit/SpoitiLists.git
 git push -u origin main
 ```
 
-Replace `Lucky/SpoitiLists` if your username or repo name is different, and update **`registry.json`** + **`manifest.json` `homepage`** + links in **`README.md`** to match.
+If you rename the repo or change your GitHub username, update **`registry.json`**, **`manifest.json` `homepage`**, and links in **`README.md`** to match.
 
 ---
 
