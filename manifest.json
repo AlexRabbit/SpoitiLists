@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
   "displayName": "SpoitiLists",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",
@@ -54,6 +54,13 @@
       "type": "string",
       "description": "Must match Spotify app settings exactly (default is usually fine).",
       "default": "spotiflac://callback"
+    },
+    {
+      "key": "oauth_login_url",
+      "label": "Spotify login link",
+      "type": "string",
+      "description": "Filled when you tap Connect (or Show last link). Select and copy this whole line into a browser.",
+      "required": false
     },
     {
       "key": "connect",

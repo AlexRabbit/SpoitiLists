@@ -523,12 +523,13 @@ function connectSpotify() {
     return { success: false, error: pk.error || "PKCE failed" };
   }
   storage.set("last_spotify_auth_url", pk.authUrl);
-  // No open_auth_url: show the link in the snackbar so you can copy it into any browser.
+  // setting_updates: SpotiFLAC merges into extension settings so the URL appears in a copyable field.
   return {
     success: true,
     message:
-      "Copy the line below and open it in Chrome/Safari (or any browser). After Spotify approves, use the redirect to get the code — see \"Authorization code\" and README.\n\n" +
-      pk.authUrl
+      "Spotify login link saved in \"Spotify login link\" below — copy it into a browser. After you approve, paste the code into Authorization code.",
+    open_auth_url: pk.authUrl,
+    setting_updates: { oauth_login_url: pk.authUrl }
   };
 }
 
@@ -544,8 +545,8 @@ function showLastSpotifyAuthLink() {
   return {
     success: true,
     message:
-      "Same login link (copy the line below). Do not tap Connect again unless you want a new login attempt.\n\n" +
-      url
+      "Same link saved again under \"Spotify login link\" (do not tap Connect unless you want a new login).",
+    setting_updates: { oauth_login_url: url }
   };
 }
 
@@ -591,7 +592,12 @@ function completeSpotifyLogin() {
 
 function disconnectSpotify() {
   auth.clearAuth();
-  return { success: true, message: "Disconnected." };
+  storage.set("last_spotify_auth_url", "");
+  return {
+    success: true,
+    message: "Disconnected.",
+    setting_updates: { oauth_login_url: "" }
+  };
 }
 
 registerExtension({
