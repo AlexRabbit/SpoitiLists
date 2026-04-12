@@ -1,0 +1,1 @@
+SpoitiLists — SpotiFLAC Mobile addon: your Spotify playlists & saved tracks in the app (OAuth). Not affiliated with Spotify or SpotiFLAC.

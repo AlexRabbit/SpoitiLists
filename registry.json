@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-12T12:00:00Z",
+  "extensions": [
+    {
+      "id": "spoiti-lists",
+      "name": "spoiti-lists",
+      "display_name": "SpoitiLists",
+      "version": "1.0.0",
+      "author": "Lucky",
+      "description": "Addon for SpotiFLAC: your Spotify playlists and saved tracks in the app. Sign in once; open a playlist to see the latest songs from Spotify.",
+      "download_url": "https://raw.githubusercontent.com/Lucky/SpoitiLists/main/extensions/spoiti-lists.spotiflac-ext",
+      "category": "integration",
+      "tags": [
+        "spotify",
+        "spotiflac",
+        "playlist",
+        "oauth",
+        "homefeed",
+        "metadata",
+        "spoiti-lists"
+      ],
+      "downloads": 0,
+      "updated_at": "2026-04-12T12:00:00Z",
+      "min_app_version": "4.1.0"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "spoiti-lists",
+  "displayName": "SpoitiLists",
+  "version": "1.0.0",
+  "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
+  "author": "Lucky",
+  "homepage": "https://github.com/Lucky/SpoitiLists",
+  "minAppVersion": "4.1.0",
+
+  "permissions": {
+    "network": [
+      "accounts.spotify.com",
+      "api.spotify.com",
+      "*.scdn.co",
+      "*.spotifycdn.com"
+    ],
+    "storage": true
+  },
+
+  "type": ["metadata_provider"],
+
+  "capabilities": {
+    "homeFeed": true
+  },
+
+  "searchBehavior": {
+    "enabled": true,
+    "placeholder": "Search Spotify (tracks, albums, playlists, artists)…",
+    "primary": false,
+    "icon": "spotify"
+  },
+
+  "urlHandler": {
+    "enabled": true,
+    "patterns": [
+      "open.spotify.com/track/",
+      "open.spotify.com/album/",
+      "open.spotify.com/playlist/",
+      "open.spotify.com/artist/"
+    ]
+  },
+
+  "settings": [
+    {
+      "key": "client_id",
+      "label": "Spotify Client ID",
+      "type": "string",
+      "description": "From Spotify Developer Dashboard (Desktop app). Never put your Client Secret here.",
+      "required": true
+    },
+    {
+      "key": "redirect_uri",
+      "label": "Redirect URI",
+      "type": "string",
+      "description": "Must match Spotify app settings exactly (default is usually fine).",
+      "default": "spotiflac://callback"
+    },
+    {
+      "key": "connect",
+      "label": "1. Connect to Spotify",
+      "type": "button",
+      "description": "Opens the browser to sign in. After approving, return to SpotiFLAC.",
+      "action": "connectSpotify"
+    },
+    {
+      "key": "finish",
+      "label": "2. Finish login",
+      "type": "button",
+      "description": "Tap after you return from the browser so SpotiFLAC can finish login.",
+      "action": "completeSpotifyLogin"
+    },
+    {
+      "key": "logout",
+      "label": "Disconnect",
+      "type": "button",
+      "description": "Clear Spotify login for this extension.",
+      "action": "disconnectSpotify"
+    }
+  ]
+}
