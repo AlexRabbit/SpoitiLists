@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
   "displayName": "SpoitiLists",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",
@@ -56,17 +56,38 @@
       "default": "spotiflac://callback"
     },
     {
+      "key": "oauth_login_url",
+      "label": "Spotify login link",
+      "type": "string",
+      "description": "Filled when you tap Connect (or Show last link). Select and copy this whole line into a browser.",
+      "required": false
+    },
+    {
       "key": "connect",
       "label": "1. Connect to Spotify",
       "type": "button",
-      "description": "Opens the browser to sign in. After approving, return to SpotiFLAC.",
+      "description": "Builds the Spotify login link and shows it (copy into a browser).",
       "action": "connectSpotify"
+    },
+    {
+      "key": "show_link",
+      "label": "Show last login link again",
+      "type": "button",
+      "description": "Shows the same URL as step 1 without starting a new login (PKCE stays valid).",
+      "action": "showLastSpotifyAuthLink"
+    },
+    {
+      "key": "pasted_auth_code",
+      "label": "Authorization code",
+      "type": "string",
+      "description": "After Spotify redirects, paste the value of code= from the URL (or the whole spotiflac://… or https://… callback URL). Save the field, then tap Finish login.",
+      "required": false
     },
     {
       "key": "finish",
       "label": "2. Finish login",
       "type": "button",
-      "description": "Tap after you return from the browser so SpotiFLAC can finish login.",
+      "description": "Exchanges the code from SpotiFLAC or from the field above for tokens.",
       "action": "completeSpotifyLogin"
     },
     {

@@ -45,13 +45,29 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 ## Part B — Connect SpoitiLists inside SpotiFLAC
 
-1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists**.
+**Why buttons used to “do nothing”:** SpotiFLAC wrapped extension actions as `{ result: { message: … } }`, while the UI read `message` only at the **top** level — so toasts never appeared. **SpoitiLists 1.0.3** expects a SpotiFLAC build that **flattens** that JSON (see **Part C**), and (for the copyable field) merges **`setting_updates`** into extension settings.
+
+1. Open **SpotiFLAC** → **Settings** → **Extensions** → **SpoitiLists** (install **1.0.3+**).
 2. Paste your **Spotify Client ID** into **Spotify Client ID**.
 3. Leave **Redirect URI** as `spotiflac://callback` unless you changed it in Spotify’s dashboard (both places must **match exactly**).
-4. Tap **1. Connect to Spotify** → the browser opens → log in to Spotify → **Agree**.
-5. When Spotify sends you back to SpotiFLAC (`spotiflac://callback`), the app should **finish login automatically**. If it does not, open **SpoitiLists** settings and tap **2. Finish login** once.
+4. Tap **1. Connect to Spotify**. The **Spotify login link** field fills with a long URL — **select and copy** it (or use the snackbar hint), open it in **Chrome / Safari**, log in, and tap **Agree**.
+5. After approval, Spotify redirects (often `spotiflac://callback?code=…`). If the browser cannot open the app, **copy the `code`** (or the whole callback URL), paste it into **Authorization code**, **save** that field, then tap **2. Finish login**.
+6. If the link field is empty, tap **Show last login link again** (avoid tapping **Connect** again unless you want a **new** PKCE attempt).
 
-**If “Connect to Spotify” does nothing:** your SpotiFLAC APK must **open the OAuth URL** from extension buttons and handle **`spotiflac://callback`** (browser → app). Older store builds did not implement that; **build SpotiFLAC Mobile from source** with an up-to-date tree (Android: `extension_detail_page.dart`, `MainActivity.kt`, `AndroidManifest.xml` for `spotiflac` OAuth), or wait for an official release that includes extension OAuth support.
+**Optional — automatic handoff:** If your SpotiFLAC build handles **`spotiflac://callback`**, you may not need to paste a code. That is implemented in the **app**, not only in SpoitiLists.
+
+**Privacy:** Clear **Authorization code** after login if you pasted a code there.
+
+---
+
+## Part C — SpotiFLAC build expected for 1.0.3
+
+For **Connect** to show feedback and fill **Spotify login link**, use a SpotiFLAC Mobile build that includes:
+
+- **Go:** `InvokeAction` flattens the extension’s return object to the top level of the JSON (so `message` / `setting_updates` are visible to Flutter).
+- **Flutter:** extension settings screen merges **`setting_updates`** from action results into saved settings, and shows **`oauth_login_url`** as selectable text.
+
+The copy in this repo’s **`SpotiFLAC-Mobile-main`** folder includes those changes; if you use an older store APK, upgrade when the upstream project ships the same fixes, or build from source.
 
 ---
 

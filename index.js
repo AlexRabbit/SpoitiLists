@@ -35,6 +35,38 @@ function getRedirectUri() {
   return "spotiflac://callback";
 }
 
+/** Pull ?code= from a pasted callback URL or return trimmed raw code. */
+function extractAuthCode(input) {
+  try {
+    var s = String(input).trim();
+    if (!s) return "";
+    var qIdx = s.indexOf("?");
+    if (qIdx >= 0) {
+      var query = s.slice(qIdx + 1);
+      var parts = query.split("&");
+      for (var i = 0; i < parts.length; i++) {
+        var seg = parts[i].split("=");
+        if (seg.length && decodeURIComponent(seg[0]) === "code") {
+          return decodeURIComponent(seg.slice(1).join("="));
+        }
+      }
+    }
+    var m = s.match(/(?:^|[?&#])code=([^&\s#]+)/);
+    if (m) return decodeURIComponent(m[1]);
+    return s;
+  } catch (e) {
+    return "";
+  }
+}
+
+function getPastedAuthCode() {
+  var raw =
+    (settings.pasted_auth_code && String(settings.pasted_auth_code).trim()) ||
+    "";
+  if (!raw) return "";
+  return extractAuthCode(raw);
+}
+
 function tryExchangePendingCode() {
   var clientId = getClientId();
   if (!clientId) return;
@@ -490,13 +522,31 @@ function connectSpotify() {
   if (!pk.success) {
     return { success: false, error: pk.error || "PKCE failed" };
   }
-  // SpotiFLAC opens this URL from the action result (open_auth_url). OAuth state
-  // must be the extension id so Android can route spotiflac://callback?code=...&state=...
+  storage.set("last_spotify_auth_url", pk.authUrl);
+  // setting_updates: SpotiFLAC merges into extension settings so the URL appears in a copyable field.
   return {
     success: true,
     message:
-      "Opening Spotify… After you approve, SpotiFLAC will finish login when you return.",
-    open_auth_url: pk.authUrl
+      "Spotify login link saved in \"Spotify login link\" below — copy it into a browser. After you approve, paste the code into Authorization code.",
+    open_auth_url: pk.authUrl,
+    setting_updates: { oauth_login_url: pk.authUrl }
+  };
+}
+
+function showLastSpotifyAuthLink() {
+  var url = storage.get("last_spotify_auth_url", "");
+  url = url ? String(url) : "";
+  if (url.length < 40) {
+    return {
+      success: false,
+      error: 'No saved link yet. Tap "Connect to Spotify" first.'
+    };
+  }
+  return {
+    success: true,
+    message:
+      "Same link saved again under \"Spotify login link\" (do not tap Connect unless you want a new login).",
+    setting_updates: { oauth_login_url: url }
   };
 }
 
@@ -507,9 +557,17 @@ function completeSpotifyLogin() {
   }
   var code = auth.getAuthCode();
   if (!code) {
+    var pasted = getPastedAuthCode();
+    if (pasted) {
+      auth.setAuthCode(pasted);
+      code = pasted;
+    }
+  }
+  if (!code) {
     return {
       success: false,
-      error: "No authorization code yet. Connect again or return to the app from the browser."
+      error:
+        "No authorization code yet. After the browser redirect, paste the code (or full callback URL) into \"Authorization code\", save, then tap Finish login again."
     };
   }
   var ex = auth.exchangeCodeWithPKCE({
@@ -525,12 +583,21 @@ function completeSpotifyLogin() {
     };
   }
   auth.setAuthCode("");
-  return { success: true, message: "Spotify connected." };
+  return {
+    success: true,
+    message:
+      "Spotify connected. Clear the \"Authorization code\" field when you are done (optional, for privacy)."
+  };
 }
 
 function disconnectSpotify() {
   auth.clearAuth();
-  return { success: true, message: "Disconnected." };
+  storage.set("last_spotify_auth_url", "");
+  return {
+    success: true,
+    message: "Disconnected.",
+    setting_updates: { oauth_login_url: "" }
+  };
 }
 
 registerExtension({
@@ -544,6 +611,7 @@ registerExtension({
   getHomeFeed: getHomeFeed,
   handleUrl: handleUrl,
   connectSpotify: connectSpotify,
+  showLastSpotifyAuthLink: showLastSpotifyAuthLink,
   completeSpotifyLogin: completeSpotifyLogin,
   disconnectSpotify: disconnectSpotify
 });
