@@ -553,8 +553,6 @@ function connectSpotify() {
   if (!clientId) {
     return { success: false, error: "Set Spotify Client ID first." };
   }
-  // Fresh OAuth start after reinstall/update: drop stale codes/tokens.
-  auth.clearAuth();
   tryExchangePendingCode();
   var t = auth.getTokens();
   if (t && t.access_token && !t.is_expired) {
