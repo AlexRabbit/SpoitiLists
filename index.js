@@ -146,8 +146,20 @@ function pickImage(images) {
   return images[0].url || "";
 }
 
+function extractTrackId(t) {
+  if (!t) return "";
+  if (t.id) return String(t.id);
+  if (t.linked_from && t.linked_from.id) return String(t.linked_from.id);
+  var uri = t.uri ? String(t.uri) : "";
+  var m = uri.match(/spotify:track:([a-zA-Z0-9]+)/);
+  if (m) return m[1];
+  return "";
+}
+
 function mapTrack(t) {
-  if (!t || !t.id) return null;
+  if (!t) return null;
+  var tid = extractTrackId(t);
+  if (!tid) return null;
   var artists = (t.artists || [])
     .map(function (a) {
       return a.name;
@@ -155,8 +167,8 @@ function mapTrack(t) {
     .join(", ");
   var album = t.album || {};
   return {
-    id: t.id,
-    name: t.name,
+    id: tid,
+    name: t.name || "Unknown track",
     artists: artists,
     album_name: album.name || "",
     album_artist: artists,
@@ -166,7 +178,7 @@ function mapTrack(t) {
     disc_number: t.disc_number || 0,
     release_date: album.release_date || "",
     isrc: (t.external_ids && t.external_ids.isrc) || "",
-    spotify_id: t.id,
+    spotify_id: tid,
     provider_id: EXT_ID
   };
 }
@@ -319,12 +331,15 @@ function getPlaylist(playlistId) {
   var pl = r.ok ? JSON.parse(r.body) : {};
   var owner = (pl.owner && pl.owner.display_name) || "";
   var rawItems = fetchAllPaginated(
-    "/playlists/" + encodeURIComponent(pid) + "/tracks?limit=50"
+    "/playlists/" + encodeURIComponent(pid) + "/tracks?market=from_token&limit=50"
   );
   var mapped = [];
   for (var i = 0; i < rawItems.length; i++) {
     var row = rawItems[i];
     var tr = row.track;
+    if (!tr && row && row.uri) {
+      tr = { uri: row.uri, name: row.name || "", artists: row.artists || [] };
+    }
     var m = mapTrack(tr);
     if (m) mapped.push(m);
   }
