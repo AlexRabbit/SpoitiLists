@@ -310,12 +310,16 @@ function getAlbum(albumId) {
 }
 
 function getPlaylist(playlistId) {
-  var r = spotifyGet("/playlists/" + encodeURIComponent(playlistId));
-  if (!r.ok) throw new Error("playlist fetch failed");
-  var pl = JSON.parse(r.body);
+  var pid = String(playlistId || "").trim();
+  var uriMatch = pid.match(/spotify:playlist:([a-zA-Z0-9]+)/);
+  if (uriMatch) pid = uriMatch[1];
+  var urlMatch = pid.match(/open\.spotify\.com\/playlist\/([a-zA-Z0-9]+)/);
+  if (urlMatch) pid = urlMatch[1];
+  var r = spotifyGet("/playlists/" + encodeURIComponent(pid));
+  var pl = r.ok ? JSON.parse(r.body) : {};
   var owner = (pl.owner && pl.owner.display_name) || "";
   var rawItems = fetchAllPaginated(
-    "/playlists/" + encodeURIComponent(playlistId) + "/tracks?limit=50"
+    "/playlists/" + encodeURIComponent(pid) + "/tracks?limit=50"
   );
   var mapped = [];
   for (var i = 0; i < rawItems.length; i++) {
@@ -325,8 +329,8 @@ function getPlaylist(playlistId) {
     if (m) mapped.push(m);
   }
   return {
-    id: playlistId,
-    name: pl.name,
+    id: pid || playlistId,
+    name: pl.name || "Playlist",
     owner: owner,
     cover_url: pickImage(pl.images),
     total_tracks: mapped.length,
