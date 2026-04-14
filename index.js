@@ -141,6 +141,21 @@ function spotifyGet(path) {
   return r;
 }
 
+function canReadSpotifyLibrary() {
+  var r = spotifyGet("/me/playlists?limit=1");
+  if (!r.ok) {
+    var msg = "Spotify API check failed (HTTP " + (r.status || 0) + ")";
+    try {
+      var data = JSON.parse(r.body || "{}");
+      if (data && data.error && data.error.message) {
+        msg += ": " + data.error.message;
+      }
+    } catch (e) {}
+    return { ok: false, error: msg };
+  }
+  return { ok: true };
+}
+
 function pickImage(images) {
   if (!images || !images.length) return "";
   return images[0].url || "";
@@ -442,6 +457,15 @@ function getHomeFeed() {
       error: "Not signed in. Use Connect, then Finish login."
     };
   }
+  var health = canReadSpotifyLibrary();
+  if (!health.ok) {
+    return {
+      success: false,
+      error:
+        "Spotify login is not usable yet. Tap Connect again and approve permissions. " +
+        health.error
+    };
+  }
 
   var sections = [];
 
@@ -556,6 +580,18 @@ function connectSpotify() {
   tryExchangePendingCode();
   var t = auth.getTokens();
   if (t && t.access_token && !t.is_expired) {
+    var health = canReadSpotifyLibrary();
+    if (!health.ok) {
+      auth.clearAuth();
+    } else {
+      return {
+        success: true,
+        message: "Spotify is already connected."
+      };
+    }
+  }
+  t = auth.getTokens();
+  if (t && t.access_token && !t.is_expired) {
     return {
       success: true,
       message: "Spotify is already connected."
@@ -589,7 +625,10 @@ function completeSpotifyLogin() {
   tryExchangePendingCode();
   var tok = auth.getTokens();
   if (tok && tok.access_token && !tok.is_expired) {
-    return { success: true, message: "Spotify connected." };
+    var autoHealth = canReadSpotifyLibrary();
+    if (autoHealth.ok) {
+      return { success: true, message: "Spotify connected." };
+    }
   }
   var code = auth.getAuthCode();
   if (!code) {
@@ -619,6 +658,16 @@ function completeSpotifyLogin() {
     };
   }
   auth.setAuthCode("");
+  var finalHealth = canReadSpotifyLibrary();
+  if (!finalHealth.ok) {
+    auth.clearAuth();
+    return {
+      success: false,
+      error:
+        "Spotify token was created but playlist access failed. Reconnect and approve all requested scopes. " +
+        finalHealth.error
+    };
+  }
   return {
     success: true,
     message:
