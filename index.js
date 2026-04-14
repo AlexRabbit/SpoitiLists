@@ -611,8 +611,11 @@ function connectSpotify() {
   return {
     success: true,
     message:
-      "Opening Spotify login. Approve in browser and return to SpotiFLAC (no manual code needed in normal flow).",
-    open_auth_url: pk.authUrl
+      "Opening Spotify login. Redirect URI: " +
+      redir +
+      ". Approve in browser and return to SpotiFLAC.",
+    open_auth_url: pk.authUrl,
+    setting_updates: { redirect_uri: redir }
   };
 }
 
