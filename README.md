@@ -49,15 +49,7 @@ You must create a small “app” in Spotify’s developer site. You are **not**
 
 **Version / Store installs:** SpotiFLAC refuses an install when the package **version equals** the one already installed (`Extension is already at version …`).
 
-**Store shows new version but Settings shows an old one:** The Store list reads **`version` from `registry.json`** (e.g. [registry on `main`](https://raw.githubusercontent.com/AlexRabbit/SpoitiLists/refs/heads/main/registry.json)). **Settings → Extensions** shows the version from **`manifest.json` on disk** inside the unpacked extension folder (whatever was in the **last** `.spotiflac-ext` you installed). Those two can disagree if:
-
-1. **`registry.json` was updated but the zip on GitHub was still old** (forgot to rebuild/commit `extensions/*.spotiflac-ext`) — then the Store advertises a new number but the download is still an old package (e.g. still contains `"version": "1.0.2"` inside the zip).
-
-2. **Caching:** Some networks or GitHub’s edge can reuse an **old** response for the same download URL. This repo adds a **`?v=<version>`** query on `download_url` on each release so the URL changes every time and clients are more likely to fetch the new file. When you release, bump **`registry.json` `version`**, **`download_url` query**, and **`updated_at`**, rebuild the zips, and push everything together.
-
-Using **`.../refs/heads/main/registry.json`** vs **`.../main/registry.json`** is equivalent for GitHub raw; SpotiFLAC keeps that URL as-is. It does **not** cause the wrong binary by itself.
-
-After every version bump, run **`scripts/package.sh`** or **`scripts/package.ps1`**, then **commit and push** both extension files with the JSON files. CI checks that inner and outer versions match.
+**Store shows new version but Settings shows an old one:** The Store reads **`registry.json`**; the installed version comes from **`manifest.json` inside the `.spotiflac-ext` file**. If you bump `manifest.json` / `registry.json` but **forget to rebuild and commit** `extensions/spoiti-lists.spotiflac-ext` and `extensions/SpotiLists.spotiflac-ext`, GitHub still serves an **old zip** — users keep getting the old version. After every version bump, run **`scripts/package.sh`** or **`scripts/package.ps1`**, then **commit and push both extension files** together with the JSON files. CI on this repo checks that they match.
 
 **Store shows “Failed to install SpoitiLists”:** SpotiFLAC downloads the file from **`download_url`** in `registry.json` (see `extension_store.go` → `downloadExtension`). If that URL returns **404** (file missing on GitHub, wrong branch, or **wrong capitalization** in the path), the install fails with a generic message. **Fix:** commit and push **`extensions/spoiti-lists.spotiflac-ext`** (and/or `extensions/SpotiLists.spotiflac-ext`) to the **`main`** branch, then open the raw URL in a browser — you must see a **download**, not “404: Not Found”. The registry uses the all-lowercase filename to avoid case mismatches. After pushing, pull to refresh in the app Store (or clear the store cache in SpotiFLAC if it still fails).
 
