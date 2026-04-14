@@ -1,0 +1,47 @@
+# Fails if manifest.json / registry.json were bumped without rebuilding the .spotiflac-ext zips.
+name: Verify extension package matches manifest
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "manifest.json"
+      - "index.js"
+      - "extensions/**"
+      - "registry.json"
+      - ".github/workflows/verify-extension-package.yml"
+  pull_request:
+    paths:
+      - "manifest.json"
+      - "index.js"
+      - "extensions/**"
+      - "registry.json"
+      - ".github/workflows/verify-extension-package.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check packaged manifest matches repo manifest
+        run: |
+          set -euo pipefail
+          M="$(jq -r .version manifest.json)"
+          for f in extensions/spoiti-lists.spotiflac-ext extensions/SpotiLists.spotiflac-ext; do
+            if [[ ! -f "$f" ]]; then
+              echo "::error::Missing $f — run scripts/package.sh (or package.ps1) and commit the extensions/ folder."
+              exit 1
+            fi
+            Z="$(unzip -p "$f" manifest.json | jq -r .version)"
+            if [[ "$M" != "$Z" ]]; then
+              echo "::error::Version mismatch: root manifest.json is $M but $f contains manifest version $Z."
+              echo "Run: ./scripts/package.sh   then git add extensions/ && git commit"
+              exit 1
+            fi
+          done
+          R="$(jq -r '.extensions[0].version' registry.json)"
+          if [[ "$M" != "$R" ]]; then
+            echo "::error::registry.json lists version $R but manifest.json is $M — update both together."
+            exit 1
+          fi
+          echo "OK: manifest, registry, and both .spotiflac-ext packages agree on $M"

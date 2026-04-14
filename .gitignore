@@ -1,4 +1,5 @@
 # Local build at repo root (optional); extensions/ copy is committed for the Store URL
+/SpotiLists.spotiflac-ext
 /spoiti-lists.spotiflac-ext
 *.zip
 .DS_Store
