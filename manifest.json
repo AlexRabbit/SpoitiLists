@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
-  "displayName": "SpoitiLists",
-  "version": "1.3.1",
+  "displayName": "SpotiLists",
+  "version": "1.4.0",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",
@@ -56,11 +56,25 @@
       "default": "spotiflac://callback"
     },
     {
+      "key": "oauth_login_url",
+      "label": "OAuth login URL",
+      "type": "string",
+      "description": "Auto-filled by Connect. If callback fails, copy this URL into browser and use fallback code field.",
+      "required": false
+    },
+    {
       "key": "connect",
       "label": "Connect to Spotify",
       "type": "button",
       "description": "One tap: opens Spotify login in your browser and returns to SpotiFLAC.",
       "action": "connectSpotify"
+    },
+    {
+      "key": "show_link",
+      "label": "Show last login URL again",
+      "type": "button",
+      "description": "Restores the last OAuth URL in the field above for troubleshooting.",
+      "action": "showLastSpotifyAuthLink"
     },
     {
       "key": "pasted_auth_code",

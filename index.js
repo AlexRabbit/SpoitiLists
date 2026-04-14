@@ -608,6 +608,7 @@ function connectSpotify() {
   if (!pk.success) {
     return { success: false, error: pk.error || "PKCE failed" };
   }
+  storage.set("last_spotify_auth_url", pk.authUrl);
   return {
     success: true,
     message:
@@ -615,7 +616,27 @@ function connectSpotify() {
       redir +
       ". Approve in browser and return to SpotiFLAC.",
     open_auth_url: pk.authUrl,
-    setting_updates: { redirect_uri: redir }
+    setting_updates: {
+      redirect_uri: redir,
+      oauth_login_url: pk.authUrl
+    }
+  };
+}
+
+function showLastSpotifyAuthLink() {
+  var url = storage.get("last_spotify_auth_url", "");
+  url = url ? String(url) : "";
+  if (url.length < 40) {
+    return {
+      success: false,
+      error: 'No login URL saved yet. Tap "Connect to Spotify" first.'
+    };
+  }
+  return {
+    success: true,
+    message:
+      "Saved login URL restored below. If callback still fails, open this URL manually and use Authorization code fallback.",
+    setting_updates: { oauth_login_url: url }
   };
 }
 
@@ -645,7 +666,9 @@ function completeSpotifyLogin() {
     return {
       success: false,
       error:
-        "No callback code received yet. Return from browser after approving Spotify, then tap Finish again. Only if callback is blocked, paste code manually."
+        "No callback code received yet. Current Redirect URI is \"" +
+        getRedirectUri() +
+        "\". Make sure Spotify app settings use this exact URI, then reconnect. If callback is blocked, paste code manually."
     };
   }
   var ex = auth.exchangeCodeWithPKCE({
@@ -697,6 +720,7 @@ registerExtension({
   getHomeFeed: getHomeFeed,
   handleUrl: handleUrl,
   connectSpotify: connectSpotify,
+  showLastSpotifyAuthLink: showLastSpotifyAuthLink,
   completeSpotifyLogin: completeSpotifyLogin,
   disconnectSpotify: disconnectSpotify
 });
