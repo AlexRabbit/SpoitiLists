@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
   "displayName": "SpoitiLists",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",
@@ -64,9 +64,9 @@
     },
     {
       "key": "pasted_auth_code",
-      "label": "Authorization code",
+      "label": "Authorization code (fallback)",
       "type": "string",
-      "description": "After Spotify redirects, paste the value of code= from the URL (or the whole spotiflac://… or https://… callback URL). Save the field, then tap Finish login.",
+      "description": "Usually not needed. Use only if callback is blocked; paste code= value (or full callback URL), save, then tap Finish login.",
       "required": false
     },
     {

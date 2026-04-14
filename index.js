@@ -553,6 +553,8 @@ function connectSpotify() {
   if (!clientId) {
     return { success: false, error: "Set Spotify Client ID first." };
   }
+  // Fresh OAuth start after reinstall/update: drop stale codes/tokens.
+  auth.clearAuth();
   tryExchangePendingCode();
   var t = auth.getTokens();
   if (t && t.access_token && !t.is_expired) {
@@ -575,7 +577,7 @@ function connectSpotify() {
   return {
     success: true,
     message:
-      "Opening Spotify login. After approval, return to SpotiFLAC and it should finish automatically.",
+      "Opening Spotify login. Approve in browser and return to SpotiFLAC (no manual code needed in normal flow).",
     open_auth_url: pk.authUrl
   };
 }
@@ -584,6 +586,12 @@ function completeSpotifyLogin() {
   var clientId = getClientId();
   if (!clientId) {
     return { success: false, error: "Set Spotify Client ID first." };
+  }
+  // Prefer automatic callback code/token exchange first.
+  tryExchangePendingCode();
+  var tok = auth.getTokens();
+  if (tok && tok.access_token && !tok.is_expired) {
+    return { success: true, message: "Spotify connected." };
   }
   var code = auth.getAuthCode();
   if (!code) {
@@ -597,7 +605,7 @@ function completeSpotifyLogin() {
     return {
       success: false,
       error:
-        "No authorization code yet. After the browser redirect, paste the code (or full callback URL) into \"Authorization code\", save, then tap Finish login again."
+        "No callback code received yet. Return from browser after approving Spotify, then tap Finish again. Only if callback is blocked, paste code manually."
     };
   }
   var ex = auth.exchangeCodeWithPKCE({
