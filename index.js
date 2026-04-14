@@ -511,6 +511,14 @@ function connectSpotify() {
   if (!clientId) {
     return { success: false, error: "Set Spotify Client ID first." };
   }
+  tryExchangePendingCode();
+  var t = auth.getTokens();
+  if (t && t.access_token && !t.is_expired) {
+    return {
+      success: true,
+      message: "Spotify is already connected."
+    };
+  }
   var redir = getRedirectUri();
   var pk = auth.startOAuthWithPKCE({
     authUrl: AUTH_URL,
@@ -522,31 +530,11 @@ function connectSpotify() {
   if (!pk.success) {
     return { success: false, error: pk.error || "PKCE failed" };
   }
-  storage.set("last_spotify_auth_url", pk.authUrl);
-  // setting_updates: SpotiFLAC merges into extension settings so the URL appears in a copyable field.
   return {
     success: true,
     message:
-      "Spotify login link saved in \"Spotify login link\" below — copy it into a browser. After you approve, paste the code into Authorization code.",
-    open_auth_url: pk.authUrl,
-    setting_updates: { oauth_login_url: pk.authUrl }
-  };
-}
-
-function showLastSpotifyAuthLink() {
-  var url = storage.get("last_spotify_auth_url", "");
-  url = url ? String(url) : "";
-  if (url.length < 40) {
-    return {
-      success: false,
-      error: 'No saved link yet. Tap "Connect to Spotify" first.'
-    };
-  }
-  return {
-    success: true,
-    message:
-      "Same link saved again under \"Spotify login link\" (do not tap Connect unless you want a new login).",
-    setting_updates: { oauth_login_url: url }
+      "Opening Spotify login. After approval, return to SpotiFLAC and it should finish automatically.",
+    open_auth_url: pk.authUrl
   };
 }
 
@@ -592,11 +580,9 @@ function completeSpotifyLogin() {
 
 function disconnectSpotify() {
   auth.clearAuth();
-  storage.set("last_spotify_auth_url", "");
   return {
     success: true,
-    message: "Disconnected.",
-    setting_updates: { oauth_login_url: "" }
+    message: "Disconnected."
   };
 }
 
@@ -611,7 +597,6 @@ registerExtension({
   getHomeFeed: getHomeFeed,
   handleUrl: handleUrl,
   connectSpotify: connectSpotify,
-  showLastSpotifyAuthLink: showLastSpotifyAuthLink,
   completeSpotifyLogin: completeSpotifyLogin,
   disconnectSpotify: disconnectSpotify
 });

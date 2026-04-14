@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
   "displayName": "SpoitiLists",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",
@@ -56,25 +56,11 @@
       "default": "spotiflac://callback"
     },
     {
-      "key": "oauth_login_url",
-      "label": "Spotify login link",
-      "type": "string",
-      "description": "Filled when you tap Connect (or Show last link). Select and copy this whole line into a browser.",
-      "required": false
-    },
-    {
       "key": "connect",
-      "label": "1. Connect to Spotify",
+      "label": "Connect to Spotify",
       "type": "button",
-      "description": "Builds the Spotify login link and shows it (copy into a browser).",
+      "description": "One tap: opens Spotify login in your browser and returns to SpotiFLAC.",
       "action": "connectSpotify"
-    },
-    {
-      "key": "show_link",
-      "label": "Show last login link again",
-      "type": "button",
-      "description": "Shows the same URL as step 1 without starting a new login (PKCE stays valid).",
-      "action": "showLastSpotifyAuthLink"
     },
     {
       "key": "pasted_auth_code",
@@ -85,9 +71,9 @@
     },
     {
       "key": "finish",
-      "label": "2. Finish login",
+      "label": "Finish login (if needed)",
       "type": "button",
-      "description": "Exchanges the code from SpotiFLAC or from the field above for tokens.",
+      "description": "Fallback only. Usually not needed if callback opens SpotiFLAC.",
       "action": "completeSpotifyLogin"
     },
     {
