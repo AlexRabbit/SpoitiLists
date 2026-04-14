@@ -1,7 +1,7 @@
 {
   "name": "spoiti-lists",
   "displayName": "SpoitiLists",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Your Spotify playlists and liked songs inside SpotiFLAC. Uses Spotify’s official API; lists refresh when you open them (home feed may cache a few minutes).",
   "author": "AlexRabbit",
   "homepage": "https://github.com/AlexRabbit/SpoitiLists",

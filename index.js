@@ -327,12 +327,35 @@ function getPlaylist(playlistId) {
   if (uriMatch) pid = uriMatch[1];
   var urlMatch = pid.match(/open\.spotify\.com\/playlist\/([a-zA-Z0-9]+)/);
   if (urlMatch) pid = urlMatch[1];
-  var r = spotifyGet("/playlists/" + encodeURIComponent(pid));
+  var r = spotifyGet(
+    "/playlists/" +
+      encodeURIComponent(pid) +
+      "?additional_types=track&market=from_token&limit=100"
+  );
   var pl = r.ok ? JSON.parse(r.body) : {};
   var owner = (pl.owner && pl.owner.display_name) || "";
-  var rawItems = fetchAllPaginated(
-    "/playlists/" + encodeURIComponent(pid) + "/tracks?market=from_token&limit=50"
-  );
+  var rawItems = [];
+  if (pl.tracks && pl.tracks.items && pl.tracks.items.length) {
+    for (var i0 = 0; i0 < pl.tracks.items.length; i0++) {
+      rawItems.push(pl.tracks.items[i0]);
+    }
+    var nextUrl = pl.tracks.next || null;
+    while (nextUrl) {
+      var nr = spotifyGet(nextUrl);
+      if (!nr.ok) break;
+      var nd = JSON.parse(nr.body);
+      var nItems = nd.items || [];
+      for (var ni = 0; ni < nItems.length; ni++) rawItems.push(nItems[ni]);
+      nextUrl = nd.next || null;
+    }
+  }
+  if (!rawItems.length) {
+    rawItems = fetchAllPaginated(
+      "/playlists/" +
+        encodeURIComponent(pid) +
+        "/tracks?additional_types=track&market=from_token&limit=100"
+    );
+  }
   var mapped = [];
   for (var i = 0; i < rawItems.length; i++) {
     var row = rawItems[i];
