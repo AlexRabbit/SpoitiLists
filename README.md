@@ -1,5 +1,5 @@
 If this helped you, consider starring the repo ⭐
-
+⭐This is still on the making, SpotiFLAC still has an oauth issue.⭐
 # SpoitiLists — an addon for SpotiFLAC
 
 **SpoitiLists** is a free extension for **[SpotiFLAC Mobile](https://github.com/zarzet/SpotiFLAC-Mobile)**. It shows **your real Spotify playlists** and **your saved (liked) songs** inside SpotiFLAC’s **Home** feed. When you **open a playlist** in the app, it loads the **current track list** from Spotify, so new songs you add on Spotify show up the next time you open that playlist (SpotiFLAC may cache the Home screen for a few minutes).
